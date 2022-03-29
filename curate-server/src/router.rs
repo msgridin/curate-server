@@ -18,6 +18,7 @@ pub(crate) fn get_routes(
     let get_currency_rates = warp::get()
         .and(warp::path("get_currency_rates"))
         .and(warp::header::<String>("currency"))
+        .and(warp::header::<String>("foreign_currency"))
         .and(with_db(db_pool.clone()))
         .and_then(logic::get_currency_rates::invoke);
 

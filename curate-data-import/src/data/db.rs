@@ -11,7 +11,14 @@ const INIT_SQL: &str = "./db.sql";
 const TABLE_CURRENCIES: &str = "currencies";
 const TABLE_RATES: &str = "rates";
 
-pub(crate) async fn create_pool(db_connection_string: &str) -> Result<Pool<Postgres>, Box<dyn Error>> {
+pub(crate) async fn init(connection_string: &str) -> DBPool {
+    let db_pool = create_pool(connection_string).await.expect("ERROR: CREATE DATABASE POOL");
+    init_db(&db_pool).await.expect("ERROR: INIT DATABASE");
+
+    db_pool
+}
+
+pub async fn create_pool(db_connection_string: &str) -> Result<Pool<Postgres>, Box<dyn Error>> {
     let db_pool = PgPoolOptions::new()
         .max_connections(DB_POOL_MAX_CONNECTIONS)
         .connect(db_connection_string).await?;
@@ -22,7 +29,7 @@ pub(crate) async fn create_pool(db_connection_string: &str) -> Result<Pool<Postg
 pub(crate) async fn init_db(db_pool: &DBPool) -> Result<(), Box<dyn Error>> {
     let init_file =
         fs::read_to_string(INIT_SQL)
-    .map_err(|e| format!("{:?}", e))?;
+            .map_err(|e| format!("{:?}", e))?;
 
     db_pool.execute(init_file.as_str()).await?;
 
@@ -42,14 +49,6 @@ pub(crate) async fn create_currency(currency: Currency, db_pool: &DBPool) -> Res
     Ok(())
 }
 
-pub(crate) async fn read_currencies(db_pool: &DBPool) -> Result<Vec<Currency>, Box<dyn Error>> {
-    let currencies: Vec<Currency> = sqlx::query_as::<_, Currency>(format!("SELECT * FROM {}", TABLE_CURRENCIES).as_str())
-        .fetch_all(db_pool).await?;
-
-    println!("{:?}", currencies);
-    Ok(currencies)
-}
-
 pub(crate) async fn create_rate(currency: &str, foreign_currency: &str, rate: f64, date: DateTime<Utc>, db_pool: &DBPool) -> Result<(), Box<dyn Error>> {
 
     sqlx::query(format!("INSERT INTO {}
@@ -62,15 +61,6 @@ pub(crate) async fn create_rate(currency: &str, foreign_currency: &str, rate: f6
         .execute(db_pool).await?;
 
     Ok(())
-}
-
-pub(crate) async fn read_currency(currency_id: &str, db_pool: &DBPool) -> Result<Currency, Box<dyn Error>> {
-    let currency = sqlx::query_as::<_, Currency>
-        (format!("SELECT * FROM {} WHERE id = $1 LIMIT 1", TABLE_CURRENCIES).as_str())
-        .bind(currency_id)
-        .fetch_one(db_pool).await?;
-
-    Ok(currency)
 }
 
 pub(crate) async fn read_last_rate(currency_id: &str, db_pool: &DBPool) -> Result<Rate, Box<dyn Error>> {

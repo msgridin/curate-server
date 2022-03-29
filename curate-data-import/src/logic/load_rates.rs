@@ -1,9 +1,7 @@
 use std::error::Error;
-use chrono::{DateTime, TimeZone, Utc};
+use chrono::{TimeZone, Utc};
 use crate::DBPool;
 use crate::data;
-use csv;
-use crate::data::db::{read_currency, read_last_rate};
 
 pub(crate) async fn invoke(db_pool: &DBPool) -> Result<(), Box<dyn Error>> {
 
@@ -13,12 +11,8 @@ pub(crate) async fn invoke(db_pool: &DBPool) -> Result<(), Box<dyn Error>> {
 
     for currency in CURRENCIES {
         let mut date = Utc.ymd(2021, 1, 1).and_hms(0, 0, 0);
-        date = read_last_rate(currency, &db_pool).await
+        date = data::db::read_last_rate(currency, &db_pool).await
             .map(|rate| rate.date)
-            .map_err(|e| {
-                println!("{:?}", e);
-                e.to_string()
-            })
             .unwrap_or(date);
 
         let end_date = Utc::now();

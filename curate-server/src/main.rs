@@ -5,8 +5,9 @@ use crate::config::{ ENVIRONMENT, SERVER_REST_API_PORT, DATABASE_CONNECTION_STRI
 
 mod config;
 mod data;
-mod service;
+mod router;
 mod logic;
+mod error;
 
 pub(crate) type DBPool = Pool<Postgres>;
 
@@ -14,12 +15,11 @@ pub(crate) type DBPool = Pool<Postgres>;
 async fn main(){
     greetings();
 
-    let db_pool = data::db::create_pool(DATABASE_CONNECTION_STRING).await.expect("ERROR: CREATE DATABASE POOL");
-    data::db::init_db(&db_pool).await.expect("ERROR: INIT DATABASE");
+    let db_pool = data::db::init(DATABASE_CONNECTION_STRING).await;
 
     tokio::spawn(curate_import::task(DATABASE_CONNECTION_STRING));
 
-    service::api::run(SERVER_REST_API_PORT, &db_pool).await;
+    router::run(SERVER_REST_API_PORT, &db_pool).await;
 }
 
 fn greetings() {

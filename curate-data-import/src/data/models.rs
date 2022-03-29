@@ -1,5 +1,5 @@
+#![allow(dead_code)]
 use chrono::{DateTime, Utc};
-use sqlx::Row;
 
 #[derive(Debug, Clone, serde::Deserialize, sqlx::FromRow)]
 pub(crate) struct Currency {

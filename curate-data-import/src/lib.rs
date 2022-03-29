@@ -1,17 +1,18 @@
 use std::error::Error;
-use std::future::Future;
 use tokio::time::{Duration, interval};
 use sqlx::{Pool, Postgres};
 
 mod data;
 mod logic;
+mod config;
 
 pub(crate) type DBPool = Pool<Postgres>;
 
-pub async fn task(db_connection_string: &str) {
-    let db_pool = data::db::create_pool(db_connection_string).await.expect("ERROR: CAN NOT CREATE DATABASE POOL");
+pub async fn task(connection_string: &str) {
 
-    let mut interval = interval(Duration::from_secs(60));
+    let db_pool = data::db::init(connection_string).await;
+
+    let mut interval = interval(Duration::from_secs(8 * 3_600));
     loop {
         interval.tick().await;
         let result = run_task("./currencies.csv", &db_pool).await;
