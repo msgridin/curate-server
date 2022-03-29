@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "curate-server",
+    "curate-data-import"
+]
+
