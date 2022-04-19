@@ -7,7 +7,7 @@ pub(crate) async fn invoke(server_url: &str, db_pool: &DBPool) -> Result<(), Box
 
     println!("LOADING RATES");
 
-    const CURRENCIES: [&str; 2] = ["USD", "EUR"];
+    const CURRENCIES: [&str; 3] = ["USD", "EUR", "UAH"];
 
     for currency in CURRENCIES {
         let mut date = Utc.ymd(2021, 1, 1).and_hms(0, 0, 0);
