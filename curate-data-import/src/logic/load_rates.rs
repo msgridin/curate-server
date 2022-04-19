@@ -3,7 +3,7 @@ use chrono::{TimeZone, Utc};
 use crate::DBPool;
 use crate::data;
 
-pub(crate) async fn invoke(db_pool: &DBPool) -> Result<(), Box<dyn Error>> {
+pub(crate) async fn invoke(server_url: &str, db_pool: &DBPool) -> Result<(), Box<dyn Error>> {
 
     println!("LOADING RATES");
 
@@ -18,7 +18,7 @@ pub(crate) async fn invoke(db_pool: &DBPool) -> Result<(), Box<dyn Error>> {
         let end_date = Utc::now();
         while date < end_date {
             println!("{}", date.format("%Y-%m-%d"));
-            let rates = data::api::get_rates(currency, Some(&date)).await?;
+            let rates = data::api::get_rates(currency, Some(&date), server_url).await?;
             for (foreign_currency, rate) in rates {
                 data::db::create_rate(currency, foreign_currency.as_str(), rate, date, db_pool).await?;
             }
