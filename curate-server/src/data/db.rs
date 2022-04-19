@@ -2,7 +2,7 @@ use std::error::Error;
 use sqlx::{Executor, Pool, Postgres};
 use sqlx::postgres::PgPoolOptions;
 use std::fs;
-use chrono::{DateTime, Utc};
+use chrono::{Datelike, DateTime, Duration, TimeZone, Utc};
 use crate::data::models::{Currency, Rate};
 use crate::DBPool;
 
@@ -46,14 +46,14 @@ pub(crate) async fn read_currency(currency_id: &str, db_pool: &DBPool) -> Result
 }
 
 pub(crate) async fn read_currencies(db_pool: &DBPool) -> Result<Vec<Currency>, Box<dyn Error>> {
-    let currencies: Vec<Currency> = sqlx::query_as::<_, Currency>(format!("SELECT * FROM {}", TABLE_CURRENCIES).as_str())
+    let currencies: Vec<Currency> = sqlx::query_as::<_, Currency>(format!("SELECT * FROM {} ORDER BY id", TABLE_CURRENCIES).as_str())
         .fetch_all(db_pool).await?;
 
     Ok(currencies)
 }
 
 pub(crate) async fn read_rates(currency: &str, foreign_currency: &str, start_date: DateTime<Utc>, end_date: DateTime<Utc>, db_pool: &DBPool) -> Result<Vec<Rate>, Box<dyn Error>> {
-    let rates: Vec<Rate> = sqlx::query_as::<_, Rate>(
+    let db_rates: Vec<Rate> = sqlx::query_as::<_, Rate>(
         format!("SELECT rate, exchange_date FROM {} WHERE currency = $1 AND foreign_currency = $2 AND exchange_date BETWEEN $3 AND $4", TABLE_RATES).as_str()
     )
         .bind(currency)
@@ -61,6 +61,27 @@ pub(crate) async fn read_rates(currency: &str, foreign_currency: &str, start_dat
         .bind(start_date)
         .bind(end_date)
         .fetch_all(db_pool).await?;
+
+    let mut rates: Vec<Rate> = Vec::new();
+    let mut temp_rate = 0.0;
+    let mut date = Utc.ymd(start_date.year(), start_date.month(), start_date.day()+1).and_hms(0, 0, 0);
+    while date <= end_date {
+        let position = db_rates.iter().position(|r| r.exchange_date == date);
+        temp_rate = match position {
+            Some(p) => {
+                temp_rate = db_rates[p].rate;
+                temp_rate
+            }
+            None => temp_rate
+        };
+
+        rates.push(Rate {
+            rate: temp_rate,
+            exchange_date: date
+        });
+
+        date = date.checked_add_signed(Duration::days(1)).unwrap();
+    }
 
     Ok(rates)
 }

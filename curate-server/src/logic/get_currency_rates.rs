@@ -4,7 +4,7 @@ use crate::{data, DBPool};
 use crate::data::models::{Currency, Rate};
 use crate::error::ServerError;
 
-pub(crate) async fn invoke(currency_id: String, foreign_currency_id: String, db_pool: DBPool) -> Result<impl Reply, Rejection> {
+pub(crate) async fn invoke(currency_id: String, foreign_currency_id: String, period: i64, db_pool: DBPool) -> Result<impl Reply, Rejection> {
     let currency = data::db::read_currency(currency_id.as_str(), &db_pool).await
         .map_err(|e| reject::custom(ServerError::from(e)))?;
 
@@ -14,28 +14,27 @@ pub(crate) async fn invoke(currency_id: String, foreign_currency_id: String, db_
 
     let now = Utc::now();
     let date = now;
-    let current = get_rates(currency_id.as_str(), foreign_currency_id.as_str(), date, &db_pool).await?;
+    let current = get_rates(currency_id.as_str(), foreign_currency_id.as_str(), date, period, &db_pool).await?;
 
     let date = now.checked_sub_signed(chrono::Duration::days(7)).unwrap();
-    let last_week = get_rates(currency_id.as_str(), foreign_currency_id.as_str(), date, &db_pool).await?;
+    let last_week = get_rates(currency_id.as_str(), foreign_currency_id.as_str(), date, period, &db_pool).await?;
 
     let date = dec_month(now);
-    let last_month = get_rates(currency_id.as_str(), foreign_currency_id.as_str(), date, &db_pool).await?;
+    let last_month = get_rates(currency_id.as_str(), foreign_currency_id.as_str(), date, period, &db_pool).await?;
 
     let date = dec_year(now);
-    let last_year = get_rates(currency_id.as_str(), foreign_currency_id.as_str(), date, &db_pool).await?;
+    let last_year = get_rates(currency_id.as_str(), foreign_currency_id.as_str(), date, period, &db_pool).await?;
 
     let rates: GetCurrencyRatesRequest = GetCurrencyRatesRequest {
         currency,
         foreign_currency,
-        current,
-        last_week,
-        last_month,
-        last_year
+        current_rates: current,
+        last_week_rates: last_week,
+        last_month_rates: last_month,
+        last_year_rates: last_year
     };
 
-    let json = serde_json::to_string(&rates)
-        .map_err(|e| reject::custom(ServerError(format!("{:?}", e))))?;
+    let json = warp::reply::json(&rates);
 
     Ok(json)
 }
@@ -58,8 +57,8 @@ fn dec_year(date: DateTime<Utc>) -> DateTime<Utc> {
     Utc.ymd(date.year() - 1, date.month(), date.day()).and_hms(date.hour(), date.minute(), date.second())
 }
 
-async fn get_rates(currency_id: &str, foreign_currency_id: &str, end_date: DateTime<Utc>, db_pool: &DBPool) -> Result<Vec<Rate>, Rejection> {
-    let start_date = dec_year(end_date);
+async fn get_rates(currency_id: &str, foreign_currency_id: &str, end_date: DateTime<Utc>, period: i64, db_pool: &DBPool) -> Result<Vec<Rate>, Rejection> {
+    let start_date = end_date.checked_sub_signed(chrono::Duration::days(period)).unwrap();
     let rates = data::db::read_rates(currency_id, foreign_currency_id, start_date, end_date, db_pool).await
         .map_err(|e| reject::custom(ServerError::from(e)))?;
 
@@ -70,8 +69,8 @@ async fn get_rates(currency_id: &str, foreign_currency_id: &str, end_date: DateT
 struct GetCurrencyRatesRequest {
     currency: Currency,
     foreign_currency: Currency,
-    current: Vec<Rate>,
-    last_week: Vec<Rate>,
-    last_month: Vec<Rate>,
-    last_year: Vec<Rate>,
+    current_rates: Vec<Rate>,
+    last_week_rates: Vec<Rate>,
+    last_month_rates: Vec<Rate>,
+    last_year_rates: Vec<Rate>,
 }

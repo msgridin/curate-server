@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-curate-import = { path = "../curate-data-import"}
+curate-data-import = { path = "../curate-data-import"}
 
 tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros"] }
 tokio-stream = "0.1"

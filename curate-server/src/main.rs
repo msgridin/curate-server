@@ -1,6 +1,6 @@
 use chrono::Utc;
 use sqlx::{Pool, Postgres};
-use curate_import;
+use curate_data_import;
 use crate::config::{ ENVIRONMENT, SERVER_REST_API_PORT, DATABASE_CONNECTION_STRING };
 
 mod config;
@@ -12,12 +12,12 @@ mod error;
 pub(crate) type DBPool = Pool<Postgres>;
 
 #[tokio::main]
-async fn main(){
+async fn main() {
     greetings();
 
     let db_pool = data::db::init(DATABASE_CONNECTION_STRING).await;
 
-    tokio::spawn(curate_import::task(DATABASE_CONNECTION_STRING));
+    tokio::spawn(curate_data_import::task(DATABASE_CONNECTION_STRING));
 
     router::run(SERVER_REST_API_PORT, &db_pool).await;
 }

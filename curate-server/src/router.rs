@@ -19,6 +19,7 @@ pub(crate) fn get_routes(
         .and(warp::path("get_currency_rates"))
         .and(warp::header::<String>("currency"))
         .and(warp::header::<String>("foreign_currency"))
+        .and(warp::header::<i64>("period"))
         .and(with_db(db_pool.clone()))
         .and_then(logic::get_currency_rates::invoke);
 
@@ -60,6 +61,8 @@ pub async fn handle_rejection(err: Rejection) -> Result<impl Reply, Infallible> 
         code = StatusCode::INTERNAL_SERVER_ERROR;
         error = format!("Internal server error: {:?}", err);
     }
+
+    println!("{}", error);
 
     Ok(warp::reply::with_status(error, code))
 }

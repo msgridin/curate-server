@@ -227,7 +227,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "curate-import"
+name = "curate-data-import"
 version = "0.1.0"
 dependencies = [
  "chrono",
@@ -246,7 +246,7 @@ version = "0.1.0"
 dependencies = [
  "cfg-if",
  "chrono",
- "curate-import",
+ "curate-data-import",
  "serde",
  "serde_derive",
  "serde_json",
