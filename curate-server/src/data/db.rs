@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::error::Error;
 use sqlx::{Executor, Pool, Postgres};
 use sqlx::postgres::PgPoolOptions;
@@ -46,8 +47,30 @@ pub(crate) async fn read_currency(currency_id: &str, db_pool: &DBPool) -> Result
 }
 
 pub(crate) async fn read_currencies(db_pool: &DBPool) -> Result<Vec<Currency>, Box<dyn Error>> {
-    let currencies: Vec<Currency> = sqlx::query_as::<_, Currency>(format!("SELECT * FROM {} ORDER BY id", TABLE_CURRENCIES).as_str())
+    let cur_list: Vec<Currency> = sqlx::query_as::<_, Currency>(format!("SELECT * FROM {} ORDER BY id", TABLE_CURRENCIES).as_str())
         .fetch_all(db_pool).await?;
+
+    let mut currencies: Vec<Currency> = vec![];
+
+    for cur in &cur_list {
+        let usd = read_current_rate("USD", cur.id.as_str(), db_pool).await?;
+        let eur = read_current_rate("EUR", cur.id.as_str(), db_pool).await?;
+        let uah = read_current_rate("UAH", cur.id.as_str(), db_pool).await?;
+
+        let rates = HashMap::from([
+            ("USD".to_string(), usd.rate),
+            ("EUR".to_string(), eur.rate),
+            ("UAH".to_string(), uah.rate),
+        ]);
+
+        currencies.push(Currency {
+            id: cur.id.clone(),
+            name: cur.name.clone(),
+            country_id: cur.country_id.clone(),
+            country_name: cur.country_name.clone(),
+            rates
+        });
+    }
 
     Ok(currencies)
 }
@@ -84,5 +107,29 @@ pub(crate) async fn read_rates(currency: &str, foreign_currency: &str, start_dat
     }
 
     Ok(rates)
+}
+
+pub(crate) async fn read_current_rate(currency: &str, foreign_currency: &str, db_pool: &DBPool) -> Result<Rate, Box<dyn Error>> {
+    let rate: Rate = sqlx::query_as::<_, Rate>(
+        format!("
+select
+    r.currency,
+    r.foreign_currency,
+    r.exchange_date,
+    r.rate
+from
+    {} r
+where
+    r.currency = $1
+    and r.foreign_currency = $2
+order by
+    r.exchange_date desc
+limit 1", TABLE_RATES).as_str()
+    )
+        .bind(currency)
+        .bind(foreign_currency)
+        .fetch_one(db_pool).await?;
+
+    Ok(rate)
 }
 

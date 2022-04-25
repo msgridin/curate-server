@@ -9,6 +9,7 @@ pub(crate) async fn invoke(db_pool: DBPool) -> Result<impl Reply, Rejection> {
 
     let currencies = data::db::read_currencies(&db_pool).await
        .map_err(|e| reject::custom(ServerError::from(e)))?;
+
     let response = GetCurrenciesResponse {
         currencies
     };
