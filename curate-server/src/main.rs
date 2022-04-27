@@ -1,6 +1,5 @@
 use chrono::Utc;
 use sqlx::{Pool, Postgres};
-use curate_data_import;
 use crate::config::{ENVIRONMENT, SERVER_REST_API_PORT, DATABASE_CONNECTION_STRING, SOURCE_SERVER_URL};
 
 mod config;

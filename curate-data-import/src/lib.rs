@@ -24,7 +24,7 @@ pub async fn task(connection_string: &str, server_url: &str) {
 
 async fn run_task(currencies_path: &str, server_url: &str, db_pool: &DBPool) -> Result<(), Box<dyn Error>>{
     logic::load_currencies::invoke(currencies_path, db_pool).await?;
-    logic::load_rates::invoke(server_url, &db_pool).await?;
+    logic::load_rates::invoke(server_url, db_pool).await?;
 
     Ok(())
 }
