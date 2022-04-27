@@ -32,12 +32,10 @@ pub(crate) fn get_routes(
         ])
         .allow_any_origin();
 
-    let routes = get_currencies
+    get_currencies
         .or(get_currency_rates)
         .recover(handle_rejection)
-        .with(cors);
-
-    routes
+        .with(cors)
 }
 
 pub(crate) fn with_db(db_pool: DBPool) -> impl Filter<Extract = (DBPool,), Error = Infallible> + Clone {

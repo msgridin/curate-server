@@ -23,6 +23,6 @@ async fn main() {
 
 fn greetings() {
     println!("\n*********************************");
-    println!("Curate-server <<{}>> is starting at: {}", ENVIRONMENT, Utc::now().format("%H:%M").to_string());
+    println!("Curate-server <<{}>> is starting at: {}", ENVIRONMENT, Utc::now().format("%H:%M"));
     println!("*********************************\n");
 }
