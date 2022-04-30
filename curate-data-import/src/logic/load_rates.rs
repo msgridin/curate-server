@@ -13,6 +13,8 @@ pub(crate) async fn invoke(server_url: &str, db_pool: &DBPool) -> Result<(), Box
         let mut date = Utc.ymd(2021, 1, 1).and_hms(0, 0, 0);
         date = data::db::read_last_rate(currency, db_pool).await
             .map(|rate| rate.date)
+            .map(|date| Utc.ymd(date.year(), date.month(), date.day())
+                .and_hms(0, 0, 0))
             .unwrap_or(date);
 
         let now = Utc::now();
@@ -31,6 +33,7 @@ pub(crate) async fn invoke(server_url: &str, db_pool: &DBPool) -> Result<(), Box
         println!("{}", date.format("%Y-%m-%d"));
         let rates = data::api::get_current_rates(currency, server_url).await?;
         date = DateTime::from_utc(NaiveDateTime::from_timestamp(rates.time_last_update_unix, 0), Utc);
+        date = Utc.ymd(date.year(), date.month(), date.day()).and_hms(0, 0, 0);
 
         for (foreign_currency, rate) in rates.conversion_rates {
             data::db::create_rate(currency, foreign_currency.as_str(), rate, date, db_pool).await?;
