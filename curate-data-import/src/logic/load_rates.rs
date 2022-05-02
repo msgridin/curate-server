@@ -43,4 +43,3 @@ pub(crate) async fn invoke(server_url: &str, db_pool: &DBPool) -> Result<(), Box
 
     Ok(())
 }
-

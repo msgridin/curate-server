@@ -87,7 +87,8 @@ pub(crate) async fn read_rates(currency: &str, foreign_currency: &str, start_dat
 
     let mut rates: Vec<Rate> = Vec::new();
     let mut temp_rate = 0.0;
-    let mut date = Utc.ymd(start_date.year(), start_date.month(), start_date.day()+1).and_hms(0, 0, 0);
+    let mut date = Utc.ymd(start_date.year(), start_date.month(), start_date.day()).and_hms(0, 0, 0);
+    println!("{}, {}", start_date, end_date);
     while date <= end_date {
         let position = db_rates.iter().position(|r| r.exchange_date == date);
         temp_rate = match position {

@@ -57,8 +57,10 @@ fn dec_year(date: DateTime<Utc>) -> DateTime<Utc> {
     Utc.ymd(date.year() - 1, date.month(), date.day()).and_hms(date.hour(), date.minute(), date.second())
 }
 
-async fn get_rates(currency_id: &str, foreign_currency_id: &str, end_date: DateTime<Utc>, period: i64, db_pool: &DBPool) -> Result<Vec<Rate>, Rejection> {
-    let start_date = end_date.checked_sub_signed(chrono::Duration::days(period)).unwrap();
+async fn get_rates(currency_id: &str, foreign_currency_id: &str, date: DateTime<Utc>, period: i64, db_pool: &DBPool) -> Result<Vec<Rate>, Rejection> {
+    let start_date = Utc.ymd(date.year(), date.month(), date.day()).and_hms(0, 0, 0);
+    let start_date = start_date.checked_sub_signed(chrono::Duration::days(period - 1)).unwrap();
+    let end_date = Utc.ymd(date.year(), date.month(), date.day()).and_hms(23, 59, 59);
     let rates = data::db::read_rates(currency_id, foreign_currency_id, start_date, end_date, db_pool).await
         .map_err(|e| reject::custom(ServerError::from(e)))?;
 
