@@ -68,6 +68,7 @@ pub(crate) async fn read_currencies(db_pool: &DBPool) -> Result<Vec<Currency>, B
             name: cur.name.clone(),
             country_id: cur.country_id.clone(),
             country_name: cur.country_name.clone(),
+            is_crypto: cur.is_crypto,
             rates
         });
     }
@@ -88,7 +89,6 @@ pub(crate) async fn read_rates(currency: &str, foreign_currency: &str, start_dat
     let mut rates: Vec<Rate> = Vec::new();
     let mut temp_rate = 0.0;
     let mut date = Utc.ymd(start_date.year(), start_date.month(), start_date.day()).and_hms(0, 0, 0);
-    println!("{}, {}", start_date, end_date);
     while date <= end_date {
         let position = db_rates.iter().position(|r| r.exchange_date == date);
         temp_rate = match position {
@@ -111,7 +111,7 @@ pub(crate) async fn read_rates(currency: &str, foreign_currency: &str, start_dat
 }
 
 pub(crate) async fn read_current_rate(currency: &str, foreign_currency: &str, db_pool: &DBPool) -> Result<Rate, Box<dyn Error>> {
-    let rate: Rate = sqlx::query_as::<_, Rate>(
+    let rate: Vec<Rate> = sqlx::query_as::<_, Rate>(
         format!("
 select
     r.currency,
@@ -129,8 +129,14 @@ limit 1", TABLE_RATES).as_str()
     )
         .bind(currency)
         .bind(foreign_currency)
-        .fetch_one(db_pool).await?;
+        .fetch_all(db_pool).await?;
 
-    Ok(rate)
+    match rate.len() {
+        0 => Ok(Rate {
+            rate: 0.0,
+            exchange_date: Utc::now()
+        }),
+        _ => Ok(rate[0].clone())
+    }
 }
 

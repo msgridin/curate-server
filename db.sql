@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS currencies
     id VARCHAR(3) PRIMARY KEY NOT NULL,
     name VARCHAR(50),
     country_id VARCHAR(2),
-    country_name VARCHAR(50)
+    country_name VARCHAR(50),
+    is_crypto BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS rates

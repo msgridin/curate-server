@@ -1,0 +1,387 @@
+id,name,country_id,country_name,is_crypto
+ABC,AB-Chain,,,true
+ACP,Anarchists Prime,,,true
+ACT,ACT,,,true
+ACT*,Achain,,,true
+ADA,Cardano,,,true
+ADCN,Asiadigicoin,,,true
+ADL,Adelphoi,,,true
+ADX,AdEx,,,true
+ADZ,Adzcoin,,,true
+AE,Aeternity,,,true
+AGI,SingularityNET,,,true
+AIB,AdvancedInternetBlock,,,true
+AIDOC,AI Doctor,,,true
+AION,Aion,,,true
+AIR,AirToken,,,true
+ALT,ALTcoin,,,true
+AMB,Ambrosus,,,true
+AMM,MicroMoney,,,true
+ANT,Aragon,,,true
+APC,AlpaCoin,,,true
+APPC,AppCoins,,,true
+ARC,ArcticCoin,,,true
+ARCT,ArbitrageCT,,,true
+ARDR,Ardor,,,true
+ARK,ARK,,,true
+ARN,Aeron,,,true
+ASAFE2,Allsafe,,,true
+AST,AirSwap,,,true
+ATB,ATB coin,,,true
+ATM,ATMChain,,,true
+AURS,Aureus,,,true
+AVT,AventCoin,,,true
+BAR,TBIS token,,,true
+BASH,LuckChain,,,true
+BAT,Basic Attention Token,,,true
+BAY,BitBay,,,true
+BBP,BiblePay,,,true
+BCD,Bitcoin Diamond,,,true
+BCH,Bitcoin Cash / BCC,,,true
+BCN,ByteCoin,,,true
+BCPT,BlockMason Credit Protocol,,,true
+BEE,Bee Token,,,true
+BIO,Biocoin,,,true
+BLC,BlakeCoin,,,true
+BLOCK,BlockNet,,,true
+BLU,BlueCoin,,,true
+BLZ,Bluzelle,,,true
+BMC,Blackmoon Crypto,,,true
+BNB,Binance Coin,,,true
+BNT,Bancor Network Token,,,true
+BOST,BoostCoin,,,true
+BQ,Bitqy,,,true
+BQX,Ethos,,,true
+BRD,Bread token,,,true
+BRIT,BritCoin,,,true
+BT1,Bitfinex Bitcoin Future,,,true
+BT2,Bitcoin SegWit2X,,,true
+BTC,Bitcoin,,,true
+BTCA,Bitair,,,true
+BTCS,Bitcoin Scrypt,,,true
+BTCZ,BitcoinZ,,,true
+BTG,Bitcoin Gold,,,true
+BTLC,BitLuckCoin,,,true
+BTM,BitMark,,,true
+BTM*,Bytom,,,true
+BTQ,BitQuark,,,true
+BTS,Bitshares,,,true
+BTX,Bitcore,,,true
+BURST,BurstCoin,,,true
+CALC,CaliphCoin,,,true
+CAS,Cashaa,,,true
+CAT,BlockCAT,,,true
+CCRB,CryptoCarbon,,,true
+CDT,CoinDash,,,true
+CESC,Crypto Escudo,,,true
+CHAT,ChatCoin,,,true
+CJ,CryptoJacks,,,true
+CL,CoinLancer,,,true
+CLD,Cloud,,,true
+CLOAK,CloakCoin,,,true
+CMT*,CyberMiles,,,true
+CND,Cindicator,,,true
+CNX,Cryptonex,,,true
+CPC,CapriCoin,,,true
+CRAVE,CraveCoin,,,true
+CRC,CrowdCoin,,,true
+CRE,Credits,,,true
+CRW,Crown Coin,,,true
+CTO,Crypto,,,true
+CTR,Centra,,,true
+CVC,Civic,,,true
+DAS,DAS,,,true
+DASH,DigitalCash,,,true
+DAT,Datum,,,true
+DATA,Streamr DATAcoin,,,true
+DBC,DeepBrain Chain,,,true
+DBET,Decent.bet,,,true
+DCN,Dentacoin,,,true
+DCR,Decred,,,true
+DCT,Decent,,,true
+DEEP,Deep Gold,,,true
+DENT,Dent,,,true
+DGB,DigiByte,,,true
+DGD,Digix DAO,,,true
+DIM,DIMCOIN,,,true
+DIME,DimeCoin,,,true
+DMD,Diamond,,,true
+DNT,district0x,,,true
+DOGE,Dogecoin,,,true
+DRGN,Dragonchain,,,true
+DRZ,Droidz,,,true
+DSH,Dashcoin,,,true
+DTA,Data,,,true
+EC,Eclipse,,,true
+EDG,Edgeless,,,true
+EDO,Eidoo,,,true
+EDR,E-Dinar Coin,,,true
+EKO,EchoLink,,,true
+ELA,Elastos,,,true
+ELF,aelf,,,true
+EMC,Emercoin,,,true
+EMGO,MobileGo,,,true
+ENG,Enigma,,,true
+ENJ,Enjin Coin,,,true
+EOS,EOS,,,true
+ERT,Esports.com,,,true
+ETC,Ethereum Classic,,,true
+ETH,Ethereum,,,true
+ETN,Electroneum,,,true
+ETP,Metaverse,,,true
+ETT,EncryptoTel,,,true
+EVR,Everus,,,true
+EVX,Everex,,,true
+FCT,Factoids,,,true
+FLP,Gameflip,,,true
+FOTA,Fortuna,,,true
+FRST,FirstCoin,,,true
+FUEL,Etherparty,,,true
+FUN,FunFair,,,true
+FUNC,FunCoin,,,true
+FUTC,FutCoin,,,true
+GAME,Gamecredits,,,true
+GAS,Gas,,,true
+GBYTE,Byteball,,,true
+GMX,Goldmaxcoin,,,true
+GNO,Gnosis,,,true
+GNT,Golem Network Token,,,true
+GNX,Genaro Network,,,true
+GRC,GridCoin,,,true
+GRS,Groestlcoin ,,,true
+GRWI,Growers International,,,true
+GTC,Game,,,true
+GTO,GIFTO,,,true
+GUP,Guppy,,,true
+GVT,Genesis Vision,,,true
+GXS,GXShares,,,true
+HAC,Hackspace Capital,,,true
+HNC,Hellenic Coin,,,true
+HSR,Hshare,,,true
+HST,Decision Token,,,true
+HVN,Hive Project,,,true
+ICN,Iconomi,,,true
+ICOS,ICOBox,,,true
+ICX,ICON Project,,,true
+IGNIS,Ignis,,,true
+ILC,ILCoin,,,true
+INK,Ink,,,true
+INS,INS Ecosystem,,,true
+INSN,Insane Coin,,,true
+INT,Internet Node Token,,,true
+IOP,Internet of People,,,true
+IOST,IOS token,,,true
+ITC,IoT Chain,,,true
+KCS,Kucoin,,,true
+KICK,KickCoin,,,true
+KIN,Kin,,,true
+KLC,KiloCoin,,,true
+KMD,Komodo,,,true
+KNC,Kyber Network,,,true
+KRB,Karbo,,,true
+LA,LATOKEN,,,true
+LEND,EthLend,,,true
+LEO,LEOcoin,,,true
+LINDA,Linda,,,true
+LINK,ChainLink,,,true
+LOC,Loco,,,true
+LOG,Wood Coin,,,true
+LRC,Loopring,,,true
+LSK,Lisk,,,true
+LTC,Litecoin,,,true
+LUN,Lunyr,,,true
+LUX,LUXCoin,,,true
+MAID,MaidSafe Coin,,,true
+MANA,Decentraland,,,true
+MCAP,MCAP,,,true
+MCO,Monaco,,,true
+MDA,Moeda,,,true
+MDS,MediShares,,,true
+MIOTA,IOTA,,,true
+MKR,Maker,,,true
+MLN,Melon,,,true
+MNX,MinexCoin,,,true
+MOD,Modum,,,true
+MOIN,MoinCoin,,,true
+MONA,MonaCoin,,,true
+MTL,Metal,,,true
+MTN*,Medicalchain,,,true
+MTX,Matryx,,,true
+NAS,Nebulas,,,true
+NAV,NavCoin,,,true
+NBT,NuBits,,,true
+NDC,NeverDie,,,true
+NEBL,Neblio,,,true
+NEO,NEO,,,true
+NEU,Neumark,,,true
+NEWB,Newbium,,,true
+NGC,NagaCoin,,,true
+NKC,Nukecoinz,,,true
+NLC2,NoLimitCoin,,,true
+NMC,NameCoin,,,true
+NMR,Numerai,,,true
+NULS,Nuls,,,true
+NVC,NovaCoin,,,true
+NXT,Nxt,,,true
+OAX,OpenANX,,,true
+OBITS,Obits Coin,,,true
+OC,OrangeCoin,,,true
+OCN,Odyssey,,,true
+ODN,Obsidian,,,true
+OK,OKCash,,,true
+OMG,OmiseGo,,,true
+OMNI,Omni,,,true
+ORE,Galactrum,,,true
+ORME,Ormeus Coin,,,true
+OST,Simple Token,,,true
+OTN,Open Trading Network,,,true
+OTX,Octanox,,,true
+OXY,Oxycoin,,,true
+PART,Particl,,,true
+PAY,TenX,,,true
+PBT,Primalbase,,,true
+PCS,Pabyosi Coin,,,true
+PIVX,Private Instant Verified Transaction,,,true
+PIZZA,PizzaCoin,,,true
+PLBT,Polybius,,,true
+PLR,Pillar,,,true
+POE,Po.et,,,true
+POLY,PolyBit,,,true
+POSW,PoSWallet,,,true
+POWR,Power Ledger,,,true
+PPC,PeerCoin,,,true
+PPT,Populous,,,true
+PPY,Peerplays,,,true
+PRC,ProsperCoin,,,true
+PRES,President Trump,,,true
+PRG,Paragon,,,true
+PRL,Oyster Pearl,,,true
+PRO,Propy,,,true
+PURA,Pura,,,true
+PUT,PutinCoin,,,true
+QASH,Quoine Liquid,,,true
+QAU,Quantum,,,true
+QSP,Quantstamp,,,true
+QTUM,QTUM,,,true
+QUN,QunQun,,,true
+R,Revain,,,true
+RBIES,Rubies,,,true
+RCN,Ripio,,,true
+RDD,ReddCoin,,,true
+RDN,RadonPay,,,true
+RDN*,Raiden Network,,,true
+REBL,Rebellious,,,true
+REE,ReeCoin,,,true
+REP,Augur,,,true
+REQ,Request Network,,,true
+REV,Revenu,,,true
+RGC,RG Coin,,,true
+RHOC,RChain,,,true
+RIYA,Etheriya,,,true
+RKC,Royal Kingdom Coin,,,true
+RLC,iEx.ec,,,true
+RPX,Red Pulse,,,true
+RUFF,Ruff,,,true
+SALT,Salt Lending,,,true
+SAN,Santiment,,,true
+SBC,StableCoin,,,true
+SC,Siacoin,,,true
+SENT,Sentinel,,,true
+SHIFT,Shift,,,true
+SIB,SibCoin,,,true
+SMART,SmartCash,,,true
+SMLY,SmileyCoin,,,true
+SMT*,SmartMesh,,,true
+SNC,SunContract,,,true
+SNGLS,SingularDTV,,,true
+SNM,SONM,,,true
+SNT,Status Network Token,,,true
+SPK,Sparks,,,true
+SRN,SirinLabs,,,true
+STEEM,Steem,,,true
+STK,STK Token,,,true
+STORJ,Storj,,,true
+STRAT,Stratis,,,true
+STU,BitJob,,,true
+STX,Stox,,,true
+SUB,Substratum Network,,,true
+SUR,Suretly,,,true
+SWFTC,SwftCoin,,,true
+SYS,SysCoin,,,true
+TAAS,Token as a Service,,,true
+TESLA,TeslaCoilCoin,,,true
+THC,The Hempcoin,,,true
+THETA,Theta,,,true
+THS,TechShares,,,true
+TIO,Trade.io,,,true
+TKN,TokenCard  ,,,true
+TKY,THEKEY Token,,,true
+TNB,Time New Bank,,,true
+TNT,Tierion,,,true
+TOA,TOA Coin,,,true
+TRC,TerraCoin,,,true
+TRIG,Trigger,,,true
+TRST,TrustCoin,,,true
+TRUMP,TrumpCoin,,,true
+TRX,Tronix,,,true
+UBQ,Ubiq,,,true
+UNO,Unobtanium,,,true
+UNRC,UniversalRoyalCoin,,,true
+UQC,Uquid Coin,,,true
+USDT,Tether,,,true
+UTK,Utrust,,,true
+UTT,United Traders Token,,,true
+VEE,BLOCKv,,,true
+VEN,Vechain,,,true
+VERI,Veritaseum,,,true
+VIA,ViaCoin,,,true
+VIB,Viberate,,,true
+VIBE,VIBEHub,,,true
+VOISE,Voise,,,true
+VOX,Voxels,,,true
+VRS,Veros,,,true
+VTC,VertCoin,,,true
+VUC,Virta Unique Coin,,,true
+WABI,WaBi,,,true
+WAVES,Waves,,,true
+WAX,Worldwide Asset eXchange,,,true
+WC,WhiteCoin,,,true
+WGR,Wagerr,,,true
+WINGS,Wings DAO,,,true
+WLK,Wolk,,,true
+WOP,WorldPay,,,true
+WPR,WePower,,,true
+WRC,Worldcore,,,true
+WTC,Waltonchain,,,true
+XAUR,Xaurum,,,true
+XBP,Black Pearl Coin,,,true
+XBY,XtraBYtes,,,true
+XCP,CounterParty,,,true
+XCXT,CoinonatX,,,true
+XDN,DigitalNote ,,,true
+XEM,NEM,,,true
+XGB,GoldenBird,,,true
+XHI,HiCoin,,,true
+XID,Sphre AIR,,,true
+XLM,Stellar,,,true
+XMR,Monero,,,true
+XNC,XenCoin,,,true
+XRB,Nano,,,true
+XRP,Ripple,,,true
+XTO,Tao,,,true
+XTZ,Tezos,,,true
+XUC,Exchange Union,,,true
+XVG,Verge,,,true
+XZC,ZCoin,,,true
+YEE,Yee,,,true
+YOC,YoCoin,,,true
+YOYOW,Yoyow,,,true
+ZBC,Zilbercoin,,,true
+ZCL,ZClassic,,,true
+ZEC,ZCash,,,true
+ZEN,ZenCash,,,true
+ZIL,Zilliqa,,,true
+ZNY,BitZeny,,,true
+ZRX,0x,,,true
+ZSC,Zeusshield,,,true
+611,SixEleven,,,true

@@ -38,12 +38,13 @@ pub(crate) async fn init_db(db_pool: &DBPool) -> Result<(), Box<dyn Error>> {
 
 pub(crate) async fn create_currency(currency: Currency, db_pool: &DBPool) -> Result<(), Box<dyn Error>> {
     sqlx::query(format!("INSERT INTO {}
-    (id, name, country_id, country_name) VALUES ($1, $2, $3, $4)
-    ON CONFLICT (id) DO UPDATE SET name = $2, country_id = $3, country_name = $4", TABLE_CURRENCIES).as_str())
+    (id, name, country_id, country_name, is_crypto) VALUES ($1, $2, $3, $4, $5)
+    ON CONFLICT (id) DO UPDATE SET name = $2, country_id = $3, country_name = $4, is_crypto = $5", TABLE_CURRENCIES).as_str())
         .bind(&currency.id)
         .bind(&currency.name)
         .bind(&currency.country_id)
         .bind(&currency.country_name)
+        .bind(&currency.is_crypto)
         .execute(db_pool).await?;
 
     Ok(())
@@ -77,7 +78,9 @@ pub(crate) async fn read_last_rate(currency_id: &str, db_pool: &DBPool) -> Resul
         c2.country_id,
         c2.country_name,
         r.rate,
-        r.exchange_date
+        r.exchange_date,
+        c.is_crypto,
+        c2.is_crypto
     from
         {} r
     inner join {} c on
@@ -100,12 +103,14 @@ pub(crate) async fn read_last_rate(currency_id: &str, db_pool: &DBPool) -> Resul
                 name: res.get(1),
                 country_id: res.get(2),
                 country_name: res.get(3),
+                is_crypto: res.get(10),
             },
             foreign_currency: Currency {
                 id: res.get(4),
                 name: res.get(5),
                 country_id: res.get(6),
                 country_name: res.get(7),
+                is_crypto: res.get(11),
             },
             rate: res.get(8),
             date: res.get(9)

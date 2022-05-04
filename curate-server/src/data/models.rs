@@ -9,19 +9,23 @@ pub(crate) struct Currency {
     pub(crate) country_id: String,
     pub(crate) country_name: String,
     pub(crate) rates: HashMap<String, f64>,
+    pub(crate) is_crypto: bool,
 }
 
-impl <'a, R: ::sqlx::Row> ::sqlx::FromRow<'a, R> for Currency
+impl<'a, R: ::sqlx::Row> ::sqlx::FromRow<'a, R> for Currency
     where
         &'a ::std::primitive::str: ::sqlx::ColumnIndex<R>,
         String: ::sqlx::decode::Decode<'a, R::Database>,
-        String: ::sqlx::types::Type<R::Database> {
+        String: ::sqlx::types::Type<R::Database>,
+        bool: ::sqlx::decode::Decode<'a, R::Database>,
+        bool: ::sqlx::types::Type<R::Database>, {
     fn from_row(row: &'a R) -> Result<Self, Error> {
         let id: String = row.try_get("id")?;
         let name: String = row.try_get("name")?;
         let country_id: String = row.try_get("country_id")?;
         let country_name: String = row.try_get("country_name")?;
-        Result::Ok(Currency { id, name, country_id, country_name, rates: Default::default() })
+        let is_crypto: bool = row.try_get("is_crypto")?;
+        Result::Ok(Currency { id, name, country_id, country_name, rates: Default::default(), is_crypto: is_crypto })
     }
 }
 
@@ -33,7 +37,7 @@ pub(crate) struct GetCurrenciesResponse {
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize, sqlx::FromRow)]
 pub(crate) struct Rate {
     pub(crate) rate: f64,
-    pub(crate) exchange_date: DateTime<Utc>
+    pub(crate) exchange_date: DateTime<Utc>,
 }
 
 impl PartialEq for Rate {

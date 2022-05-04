@@ -5,6 +5,7 @@ use crate::data::models::{Currency, Rate};
 use crate::error::ServerError;
 
 pub(crate) async fn invoke(currency_id: String, foreign_currency_id: String, period: i64, db_pool: DBPool) -> Result<impl Reply, Rejection> {
+    println!("get_currency_rates {} {} {}", currency_id, foreign_currency_id, period);
     let currency = data::db::read_currency(currency_id.as_str(), &db_pool).await
         .map_err(|e| reject::custom(ServerError::from(e)))?;
 

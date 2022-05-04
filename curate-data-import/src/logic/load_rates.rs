@@ -18,7 +18,8 @@ pub(crate) async fn invoke(server_url: &str, db_pool: &DBPool) -> Result<(), Box
             .unwrap_or(date);
 
         let now = Utc::now();
-        let end_date = Utc.ymd(now.year(), now.month(), now.day()).and_hms(0, 0, 0);
+        let end_date = Utc.ymd(now.year(), now.month(), now.day()).and_hms(0, 0, 0)
+            .checked_sub_signed(chrono::Duration::days(1)).unwrap();
         while date < end_date {
             // Get history rates
             println!("{}", date.format("%Y-%m-%d"));
@@ -30,11 +31,10 @@ pub(crate) async fn invoke(server_url: &str, db_pool: &DBPool) -> Result<(), Box
         }
 
         // Get current rates
-        println!("{}", date.format("%Y-%m-%d"));
         let rates = data::api::get_current_rates(currency, server_url).await?;
         date = DateTime::from_utc(NaiveDateTime::from_timestamp(rates.time_last_update_unix, 0), Utc);
         date = Utc.ymd(date.year(), date.month(), date.day()).and_hms(0, 0, 0);
-
+        println!("{}", date.format("%Y-%m-%d"));
         for (foreign_currency, rate) in rates.conversion_rates {
             data::db::create_rate(currency, foreign_currency.as_str(), rate, date, db_pool).await?;
         };

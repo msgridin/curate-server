@@ -14,7 +14,7 @@ pub async fn task(connection_string: &str, server_url: &str) {
     let mut interval = interval(Duration::from_secs(8 * 3_600));
     loop {
         interval.tick().await;
-        let result = run_task("./currencies.csv", server_url, &db_pool).await;
+        let result = run_task("./currencies.csv", "./crypto.csv", server_url, &db_pool).await;
         match result {
             Ok(_) => {},
             Err(e) => println!("{:?}", e)
@@ -22,8 +22,8 @@ pub async fn task(connection_string: &str, server_url: &str) {
     }
 }
 
-async fn run_task(currencies_path: &str, server_url: &str, db_pool: &DBPool) -> Result<(), Box<dyn Error>>{
-    logic::load_currencies::invoke(currencies_path, db_pool).await?;
+async fn run_task(currencies_path: &str, crypto_path: &str, server_url: &str, db_pool: &DBPool) -> Result<(), Box<dyn Error>>{
+    logic::load_currencies::invoke(currencies_path, crypto_path, db_pool).await?;
     logic::load_rates::invoke(server_url, db_pool).await?;
 
     Ok(())

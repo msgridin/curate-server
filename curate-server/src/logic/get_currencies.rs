@@ -7,6 +7,7 @@ use crate::error::ServerError;
 
 pub(crate) async fn invoke(db_pool: DBPool) -> Result<impl Reply, Rejection> {
 
+    println!("get_currencies");
     let currencies = data::db::read_currencies(&db_pool).await
        .map_err(|e| reject::custom(ServerError::from(e)))?;
 
