@@ -4,8 +4,9 @@ use sqlx::{Executor, Pool, Postgres};
 use sqlx::postgres::PgPoolOptions;
 use std::fs;
 use chrono::{Datelike, DateTime, Duration, TimeZone, Utc};
-use crate::data::models::{Currency, Rate};
+use crate::data::models::{Currency, CurrentRate, Rate};
 use crate::DBPool;
+use crate::logic::util::get_multiplier;
 
 const DB_POOL_MAX_CONNECTIONS: u32 = 32;
 const INIT_SQL: &str = "./db.sql";
@@ -53,14 +54,26 @@ pub(crate) async fn read_currencies(db_pool: &DBPool) -> Result<Vec<Currency>, B
     let mut currencies: Vec<Currency> = vec![];
 
     for cur in &cur_list {
-        let usd = read_current_rate("USD", cur.id.as_str(), db_pool).await?;
-        let eur = read_current_rate("EUR", cur.id.as_str(), db_pool).await?;
-        let uah = read_current_rate("UAH", cur.id.as_str(), db_pool).await?;
+        let usd_rate = read_current_rate("USD", cur.id.as_str(), db_pool).await?;
+        let usd_multiplier = get_multiplier(usd_rate);
+        let eur_rate = read_current_rate("EUR", cur.id.as_str(), db_pool).await?;
+        let eur_multiplier = get_multiplier(eur_rate);
+        let uah_rate = read_current_rate("UAH", cur.id.as_str(), db_pool).await?;
+        let uah_multiplier = get_multiplier(uah_rate);
 
         let rates = HashMap::from([
-            ("USD".to_string(), usd.rate),
-            ("EUR".to_string(), eur.rate),
-            ("UAH".to_string(), uah.rate),
+            ("USD".to_string(), CurrentRate {
+                rate: usd_rate * (usd_multiplier as f64),
+                multiplier: usd_multiplier,
+            }),
+            ("EUR".to_string(), CurrentRate {
+                rate: eur_rate * (eur_multiplier as f64),
+                multiplier: eur_multiplier,
+            }),
+            ("UAH".to_string(), CurrentRate {
+                rate: uah_rate * (uah_multiplier as f64),
+                multiplier: uah_multiplier,
+            }),
         ]);
 
         currencies.push(Currency {
@@ -72,7 +85,7 @@ pub(crate) async fn read_currencies(db_pool: &DBPool) -> Result<Vec<Currency>, B
             rates
         });
     }
-
+    println!("{:#?}", currencies);
     Ok(currencies)
 }
 
@@ -110,7 +123,7 @@ pub(crate) async fn read_rates(currency: &str, foreign_currency: &str, start_dat
     Ok(rates)
 }
 
-pub(crate) async fn read_current_rate(currency: &str, foreign_currency: &str, db_pool: &DBPool) -> Result<Rate, Box<dyn Error>> {
+pub(crate) async fn read_current_rate(currency: &str, foreign_currency: &str, db_pool: &DBPool) -> Result<f64, Box<dyn Error>> {
     let rate: Vec<Rate> = sqlx::query_as::<_, Rate>(
         format!("
 select
@@ -132,11 +145,8 @@ limit 1", TABLE_RATES).as_str()
         .fetch_all(db_pool).await?;
 
     match rate.len() {
-        0 => Ok(Rate {
-            rate: 0.0,
-            exchange_date: Utc::now()
-        }),
-        _ => Ok(rate[0].clone())
+        0 => Ok(0.0),
+        _ => Ok(rate[0].rate)
     }
 }
 

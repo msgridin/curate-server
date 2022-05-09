@@ -1,6 +1,6 @@
 use chrono::Utc;
 use sqlx::{Pool, Postgres};
-use crate::config::{ENVIRONMENT, SERVER_REST_API_PORT, DATABASE_CONNECTION_STRING, SOURCE_SERVER_URL};
+use crate::config::{ENVIRONMENT, SERVER_REST_API_PORT, DATABASE_CONNECTION_STRING, CURRENCY_DATASOURCE_URL, CRYPTO_DATASOURCE_URL, MAIN_CURRENCIES};
 
 mod config;
 mod data;
@@ -16,7 +16,7 @@ async fn main() {
 
     let db_pool = data::db::init(DATABASE_CONNECTION_STRING).await;
 
-    tokio::spawn(curate_data_import::task(DATABASE_CONNECTION_STRING, SOURCE_SERVER_URL));
+    tokio::spawn(curate_data_import::task(MAIN_CURRENCIES, DATABASE_CONNECTION_STRING, CURRENCY_DATASOURCE_URL, CRYPTO_DATASOURCE_URL));
 
     router::run(SERVER_REST_API_PORT, &db_pool).await;
 }

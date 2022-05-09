@@ -64,9 +64,8 @@ pub(crate) async fn create_rate(currency: &str, foreign_currency: &str, rate: f6
     Ok(())
 }
 
-pub(crate) async fn read_last_rate(currency_id: &str, db_pool: &DBPool) -> Result<Rate, Box<dyn Error>> {
+pub(crate) async fn read_last_rate(currency_id: &str, is_crypto: bool, db_pool: &DBPool) -> Result<Rate, Box<dyn Error>> {
 
-    println!("{}", currency_id);
     let query = format!("
     select
         c.id,
@@ -88,12 +87,13 @@ pub(crate) async fn read_last_rate(currency_id: &str, db_pool: &DBPool) -> Resul
     inner join currencies c2 on
         r.foreign_currency = c2.id
     where
-        r.currency = $1
+        r.currency = $1 and r.foreign_currency = $2
     order by
         r.exchange_date desc
     limit 1", TABLE_RATES, TABLE_CURRENCIES);
     let res = sqlx::query(query.as_str())
         .bind(currency_id)
+        .bind(if is_crypto { "BTC" } else { "GBP" })
         .fetch_one(db_pool)
         .await?;
 

@@ -22,6 +22,12 @@ pub(crate) fn get_routes(
         .and(warp::header::<i64>("period"))
         .and(with_db(db_pool.clone()))
         .and_then(logic::get_currency_rates::invoke);
+    let get_current_rate = warp::get()
+        .and(warp::path("get_current_rate"))
+        .and(warp::header::<String>("from_currency"))
+        .and(warp::header::<String>("to_currency"))
+        .and(with_db(db_pool.clone()))
+        .and_then(logic::get_current_rate::invoke);
 
     // CORS
     let cors = warp::cors()
@@ -34,6 +40,7 @@ pub(crate) fn get_routes(
 
     get_currencies
         .or(get_currency_rates)
+        .or(get_current_rate)
         .recover(handle_rejection)
         .with(cors)
 }

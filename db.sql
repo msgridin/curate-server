@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS currencies
 (
-    id VARCHAR(3) PRIMARY KEY NOT NULL,
+    id VARCHAR(7) PRIMARY KEY NOT NULL,
     name VARCHAR(50),
     country_id VARCHAR(2),
     country_name VARCHAR(50),
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS currencies
 
 CREATE TABLE IF NOT EXISTS rates
 (
-    currency VARCHAR(3) NOT NULL,
+    currency VARCHAR(7) NOT NULL,
     foreign_currency VARCHAR(3) NOT NULL,
     rate DOUBLE PRECISION NOT NULL,
     exchange_date TIMESTAMP WITH TIME ZONE NOT NULL,

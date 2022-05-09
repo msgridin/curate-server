@@ -8,7 +8,7 @@ pub(crate) struct Currency {
     pub(crate) name: String,
     pub(crate) country_id: String,
     pub(crate) country_name: String,
-    pub(crate) rates: HashMap<String, f64>,
+    pub(crate) rates: HashMap<String, CurrentRate>,
     pub(crate) is_crypto: bool,
 }
 
@@ -25,13 +25,30 @@ impl<'a, R: ::sqlx::Row> ::sqlx::FromRow<'a, R> for Currency
         let country_id: String = row.try_get("country_id")?;
         let country_name: String = row.try_get("country_name")?;
         let is_crypto: bool = row.try_get("is_crypto")?;
-        Result::Ok(Currency { id, name, country_id, country_name, rates: Default::default(), is_crypto: is_crypto })
+        Result::Ok(Currency { id, name, country_id, country_name, rates: Default::default(), is_crypto })
     }
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize, sqlx::FromRow)]
 pub(crate) struct GetCurrenciesResponse {
     pub(crate) currencies: Vec<Currency>,
+}
+
+#[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
+pub(crate) struct GetCurrencyRatesResponse {
+    pub(crate) currency: Currency,
+    pub(crate) foreign_currency: Currency,
+    pub(crate) current_rates: Vec<Rate>,
+    pub(crate) last_week_rates: Vec<Rate>,
+    pub(crate) last_month_rates: Vec<Rate>,
+    pub(crate) last_year_rates: Vec<Rate>,
+    pub(crate) multiplier: i64,
+}
+
+#[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
+pub(crate) struct CurrentRate {
+    pub(crate) rate: f64,
+    pub(crate) multiplier: i64,
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize, sqlx::FromRow)]
