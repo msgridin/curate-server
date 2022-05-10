@@ -85,7 +85,6 @@ pub(crate) async fn read_currencies(db_pool: &DBPool) -> Result<Vec<Currency>, B
             rates
         });
     }
-    println!("{:#?}", currencies);
     Ok(currencies)
 }
 
