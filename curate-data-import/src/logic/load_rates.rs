@@ -27,7 +27,7 @@ async fn load_historical_rates(main_currencies: [&str; 3], is_crypto: bool, curr
         let now = Utc::now();
         let end_date = Utc.ymd(now.year(), now.month(), now.day()).and_hms(0, 0, 0)
             .checked_sub_signed(chrono::Duration::days(1)).unwrap();
-        while date < end_date {
+        while date <= end_date {
             // Get history rates
             println!("{}: {}", currency, date.format("%Y-%m-%d"));
             let rates = if is_crypto {
