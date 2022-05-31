@@ -64,3 +64,16 @@ impl PartialEq for Rate {
             && self.exchange_date.day() == other.exchange_date.day()
     }
 }
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub(crate) struct GetRateNotificationSubscriptionsResponse {
+    pub(crate) subscriptions: Vec<RateSubscription>,
+}
+
+#[derive(serde::Serialize, serde::Deserialize, Debug, Clone, sqlx::FromRow)]
+pub(crate) struct RateSubscription {
+    pub(crate) currency: String,
+    pub(crate) foreign_currency: String,
+    pub(crate) firebase_token: String,
+}
+

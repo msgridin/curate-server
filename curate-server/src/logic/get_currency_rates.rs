@@ -13,7 +13,6 @@ pub(crate) async fn invoke(currency_id: String, foreign_currency_id: String, per
     let foreign_currency = data::db::read_currency(foreign_currency_id.as_str(), &db_pool).await
         .map_err(|e| reject::custom(ServerError::from(e)))?;
 
-
     let now = Utc::now();
     let date = now;
     let current = get_rates(currency_id.as_str(), foreign_currency_id.as_str(), date, period, &db_pool).await?;
@@ -55,7 +54,14 @@ fn dec_month(date: DateTime<Utc>) -> DateTime<Utc> {
         _ => date.month() - 1,
     };
 
-    Utc.ymd(year, month, date.day()).and_hms(date.hour(), date.minute(), date.second())
+    let max_days = get_days_from_month(year, month);
+
+    let day = match date.day() {
+        d if d > max_days => max_days,
+        _ => date.day(),
+    };
+
+    Utc.ymd(year, month, day).and_hms(date.hour(), date.minute(), date.second())
 }
 
 fn dec_year(date: DateTime<Utc>) -> DateTime<Utc> {
@@ -70,4 +76,20 @@ async fn get_rates(currency_id: &str, foreign_currency_id: &str, date: DateTime<
         .map_err(|e| reject::custom(ServerError::from(e)))?;
 
     Ok(rates)
+}
+
+fn get_days_from_month(year: i32, month: u32) -> u32 {
+    Utc.ymd(
+        match month {
+            12 => year + 1,
+            _ => year,
+        },
+        match month {
+            12 => 1,
+            _ => month + 1,
+        },
+        1,
+    )
+        .signed_duration_since(Utc.ymd(year, month, 1))
+        .num_days() as u32
 }

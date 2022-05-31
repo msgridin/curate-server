@@ -4,7 +4,7 @@ use sqlx::{Executor, Pool, Postgres};
 use sqlx::postgres::PgPoolOptions;
 use std::fs;
 use chrono::{Datelike, DateTime, Duration, TimeZone, Utc};
-use crate::data::models::{Currency, CurrentRate, Rate};
+use crate::data::models::{Currency, CurrentRate, Rate, RateSubscription};
 use crate::DBPool;
 use crate::logic::util::get_multiplier;
 
@@ -12,6 +12,7 @@ const DB_POOL_MAX_CONNECTIONS: u32 = 32;
 const INIT_SQL: &str = "./db.sql";
 const TABLE_CURRENCIES: &str = "currencies";
 const TABLE_RATES: &str = "rates";
+const TABLE_RATE_SUBSCRIPTIONS: &str = "rate_subscriptions";
 
 pub(crate) async fn init(connection_string: &str) -> DBPool {
     let db_pool = create_pool(connection_string).await.expect("ERROR: CREATE DATABASE POOL");
@@ -147,5 +148,26 @@ limit 1", TABLE_RATES).as_str()
         0 => Ok(0.0),
         _ => Ok(rate[0].rate)
     }
+}
+
+pub(crate) async fn read_rate_subscriptions(firebase_token: &str, db_pool: &DBPool) -> Result<Vec<RateSubscription>, Box<dyn Error>> {
+    let subscriptions: Vec<RateSubscription> = sqlx::query_as::<_, RateSubscription>(
+        format!("
+select
+    r.currency,
+    r.foreign_currency,
+    r.firebase_token
+from
+    {} r
+where
+    r.firebase_token = $1
+order by
+    r.currency
+", TABLE_RATE_SUBSCRIPTIONS).as_str()
+    )
+        .bind(firebase_token)
+        .fetch_all(db_pool).await?;
+
+    Ok(subscriptions)
 }
 

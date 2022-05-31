@@ -23,6 +23,7 @@ async fn load_historical_rates(main_currencies: [&str; 3], is_crypto: bool, curr
             .map(|date| Utc.ymd(date.year(), date.month(), date.day())
                 .and_hms(0, 0, 0))
             .unwrap_or(date);
+        date = date.checked_add_signed(chrono::Duration::days(1)).unwrap();
 
         let now = Utc::now();
         let end_date = Utc.ymd(now.year(), now.month(), now.day()).and_hms(0, 0, 0)

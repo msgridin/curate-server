@@ -28,6 +28,11 @@ pub(crate) fn get_routes(
         .and(warp::header::<String>("to_currency"))
         .and(with_db(db_pool.clone()))
         .and_then(logic::get_current_rate::invoke);
+    let get_rate_subscriptions = warp::get()
+        .and(warp::path("get_rate_subscriptions"))
+        .and(warp::header::<String>("firebase_token"))
+        .and(with_db(db_pool.clone()))
+        .and_then(logic::get_rate_subscriptions::invoke);
 
     // CORS
     let cors = warp::cors()
@@ -41,6 +46,7 @@ pub(crate) fn get_routes(
     get_currencies
         .or(get_currency_rates)
         .or(get_current_rate)
+        .or(get_rate_subscriptions)
         .recover(handle_rejection)
         .with(cors)
 }
