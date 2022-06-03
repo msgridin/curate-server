@@ -33,6 +33,20 @@ pub(crate) fn get_routes(
         .and(warp::header::<String>("firebase_token"))
         .and(with_db(db_pool.clone()))
         .and_then(logic::get_rate_subscriptions::invoke);
+    let subscribe_rate_notification = warp::get()
+        .and(warp::path("subscribe_rate_notification"))
+        .and(warp::header::<String>("from_currency"))
+        .and(warp::header::<String>("to_currency"))
+        .and(warp::header::<String>("firebase_token"))
+        .and(with_db(db_pool.clone()))
+        .and_then(logic::subscribe_rate_notification::invoke);
+    let unsubscribe_rate_notification = warp::get()
+        .and(warp::path("unsubscribe_rate_notification"))
+        .and(warp::header::<String>("from_currency"))
+        .and(warp::header::<String>("to_currency"))
+        .and(warp::header::<String>("firebase_token"))
+        .and(with_db(db_pool.clone()))
+        .and_then(logic::unsubscribe_rate_notification::invoke);
 
     // CORS
     let cors = warp::cors()
@@ -47,6 +61,8 @@ pub(crate) fn get_routes(
         .or(get_currency_rates)
         .or(get_current_rate)
         .or(get_rate_subscriptions)
+        .or(subscribe_rate_notification)
+        .or(unsubscribe_rate_notification)
         .recover(handle_rejection)
         .with(cors)
 }

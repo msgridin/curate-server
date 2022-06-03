@@ -7,10 +7,10 @@ use crate::logic::util::{get_min_rate, get_multiplier};
 
 pub(crate) async fn invoke(currency_id: String, foreign_currency_id: String, period: i64, db_pool: DBPool) -> Result<impl Reply, Rejection> {
     println!("get_currency_rates {} {} {}", currency_id, foreign_currency_id, period);
-    let currency = data::db::read_currency(currency_id.as_str(), &db_pool).await
+    let currency = data::db::currencies::read_currency(currency_id.as_str(), &db_pool).await
         .map_err(|e| reject::custom(ServerError::from(e)))?;
 
-    let foreign_currency = data::db::read_currency(foreign_currency_id.as_str(), &db_pool).await
+    let foreign_currency = data::db::currencies::read_currency(foreign_currency_id.as_str(), &db_pool).await
         .map_err(|e| reject::custom(ServerError::from(e)))?;
 
     let now = Utc::now();
@@ -72,7 +72,7 @@ async fn get_rates(currency_id: &str, foreign_currency_id: &str, date: DateTime<
     let start_date = Utc.ymd(date.year(), date.month(), date.day()).and_hms(0, 0, 0);
     let start_date = start_date.checked_sub_signed(chrono::Duration::days(period - 1)).unwrap();
     let end_date = Utc.ymd(date.year(), date.month(), date.day()).and_hms(23, 59, 59);
-    let rates = data::db::read_rates(currency_id, foreign_currency_id, start_date, end_date, db_pool).await
+    let rates = data::db::rates::read_rates(currency_id, foreign_currency_id, start_date, end_date, db_pool).await
         .map_err(|e| reject::custom(ServerError::from(e)))?;
 
     Ok(rates)

@@ -18,8 +18,9 @@ CREATE TABLE IF NOT EXISTS rates
 
 CREATE TABLE IF NOT EXISTS rate_subscriptions
 (
-    firebase_token VARCHAR(255) PRIMARY KEY NOT NULL,
-    currency VARCHAR(7) NOT NULL,
-    foreign_currency VARCHAR(3) NOT NULL
+    from_currency VARCHAR(7) NOT NULL,
+    to_currency VARCHAR(7) NOT NULL,
+    firebase_token VARCHAR(255) NOT NULL,
+    PRIMARY KEY(from_currency, to_currency, firebase_token)
 );
 
