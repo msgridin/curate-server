@@ -2,6 +2,7 @@
 
 members = [
     "curate-server",
-    "curate-data-import"
+    "curate-data-import",
+    "curate-notifications"
 ]
 

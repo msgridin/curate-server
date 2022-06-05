@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/curate-import/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/curate-server/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/curate-data-import/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/curate-notifications/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
