@@ -1,16 +1,18 @@
 use std::error::Error;
-use crate::data::db::TABLE_RATES;
-use crate::data::models::Rate;
+use sqlx::postgres::PgRow;
+use sqlx::Row;
+use crate::data::db::{TABLE_RATE_SUBSCRIPTIONS, TABLE_RATES};
+use crate::data::models::{Rate, RateSubscription};
 use crate::DBPool;
 
-pub async fn read_current_rate(currency: &str, foreign_currency: &str, db_pool: &DBPool) -> Result<f64, Box<dyn Error>> {
+pub(crate) async fn read_current_rate(currency: &str, foreign_currency: &str, db_pool: &DBPool) -> Result<f64, Box<dyn Error>> {
     let rate: Vec<Rate> = sqlx::query_as::<_, Rate>(
         format!("
 select
     r.currency,
     r.foreign_currency,
-    r.exchange_date,
-    r.rate
+    r.rate,
+    r.exchange_date
 from
     {} r
 where
@@ -28,4 +30,34 @@ limit 1", TABLE_RATES).as_str()
         0 => Ok(0.0),
         _ => Ok(rate[0].rate)
     }
+}
+
+pub(crate) async fn read_firebase_tokens(db_pool: &DBPool) -> Result<Vec<String>, Box<dyn Error>> {
+    let tokens: Vec<String> = sqlx::query(
+        format!("select distinct r.firebase_token from {} r", TABLE_RATE_SUBSCRIPTIONS).as_str()
+    )
+        .map(|row: PgRow| row.get(0))
+        .fetch_all(db_pool).await?;
+
+    Ok(tokens)
+}
+
+pub(crate) async fn read_rate_subscriptions(firebase_token: &str, db_pool: &DBPool) -> Result<Vec<RateSubscription>, Box<dyn Error>> {
+    let subscriptions: Vec<RateSubscription> = sqlx::query_as::<_, RateSubscription>(
+        format!("
+        select
+            r.from_currency ,
+            r.to_currency,
+            r.firebase_token
+        from
+            {} r
+        where
+            r.firebase_token = $1
+
+        ", TABLE_RATE_SUBSCRIPTIONS).as_str()
+    )
+        .bind(firebase_token)
+        .fetch_all(db_pool).await?;
+
+    Ok(subscriptions)
 }
